@@ -2,7 +2,7 @@
 extends RigidBody2D
 
 var nose_norm = vec2(0,0)
-var accel = 40.0
+var accel = 60.0
 var sun = null
 var shadow = null
 var sound_motor = 0
