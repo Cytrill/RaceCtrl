@@ -53,7 +53,7 @@ func _fixed_process(delta):
 			#set_rot(get_rot()-1*delta)
 			
 	
-	shadow.set_offset(vec2(10,20).rotated(-get_rot()))
+	shadow.set_offset(vec2(15,25).rotated(-get_rot()))
 	
 func _integrate_forces(state):
 	if (state.get_contact_count() > 0):
