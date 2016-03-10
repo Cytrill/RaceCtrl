@@ -32,6 +32,32 @@ func _fixed_process(delta):
 					leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
 					leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
 					get_node("/root/World").add_child(new_player)
+	
+	
+	var i = 0
+	for child in get_node("/root/World").get_children():
+		if "Cars" in child.get_groups():
+			i+=1
+			child.place = i
+	
+	var last_car = null
+	for child in get_node("/root/World").get_children():
+		if "Cars" in child.get_groups():
+			if last_car == null:
+				last_car = child
+			elif (child.lap > last_car.lap 
+				or (child.lap == last_car.lap 
+				and (child.last_checkpoint > last_car.last_checkpoint
+				or (child.last_checkpoint == last_car.last_checkpoint
+				and child.last_checkpoint_time < last_car.last_checkpoint_time)))):
+				if (child.place > last_car.place):
+					var place = child.place
+					child.place = last_car.place
+					last_car.place = place
+					
+			last_car = child 
+
+	
 
 func _on_raiseZIndex_body_enter( body ):
 	pass # replace with function body

@@ -14,6 +14,7 @@ var sound_skid = -1
 var last_checkpoint = 0
 var last_checkpoint_time = 0
 var lap = 0
+var place = 0
 
 func _ready():
 	add_to_group("Cars")
