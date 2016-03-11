@@ -15,6 +15,7 @@ var last_checkpoint = 0
 var last_checkpoint_time = 0
 var lap = 0
 var place = 0
+var score = 0
 
 func _ready():
 	add_to_group("Cars")
@@ -33,7 +34,7 @@ func _fixed_process(delta):
 		accel = -abs(accel)
 		apply_impulse(Vector2(0,0),nose_norm*accel)
 	
-	get_node("SamplePlayer2D").set_param(SamplePlayer2D.PARAM_PITCH_SCALE, .75 + get_linear_velocity().length()/170)
+	get_node("SamplePlayer2D").set_param(SamplePlayer2D.PARAM_PITCH_SCALE, .85 + get_linear_velocity().length()/170)
 	
 	if (abs(get_linear_velocity().angle_to(nose_norm)) > 0.5 && get_linear_velocity().length() > 150):
 		var skidmark = get_node("/root/World/Viewport/Skidmark")
@@ -60,4 +61,5 @@ func _integrate_forces(state):
 	if (state.get_contact_count() > 0):
 		print("KOLLISION")
 		
-
+func calc_score():
+	score = (lap * 10000) + (last_checkpoint * 100) + (1/ (1+last_checkpoint_time))

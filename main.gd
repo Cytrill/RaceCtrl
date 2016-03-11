@@ -17,8 +17,9 @@ func _fixed_process(delta):
 	get_node("Skidmarks").set_texture(get_node("Viewport").get_render_target_texture())
 	
 	if time_elapsed < spawn_time:
-		for i in range(128):
+		for i in range(1,128):
 			if Input.is_joy_button_pressed(i, 0):
+				print("Button: " + str(i))
 				var exists = false
 				for child in get_node("/root/World").get_children():
 					if "Cars" in child.get_groups():
@@ -34,28 +35,7 @@ func _fixed_process(delta):
 					get_node("/root/World").add_child(new_player)
 	
 	
-	var i = 0
-	for child in get_node("/root/World").get_children():
-		if "Cars" in child.get_groups():
-			i+=1
-			child.place = i
-	
-	var last_car = null
-	for child in get_node("/root/World").get_children():
-		if "Cars" in child.get_groups():
-			if last_car == null:
-				last_car = child
-			elif (child.lap > last_car.lap 
-				or (child.lap == last_car.lap 
-				and (child.last_checkpoint > last_car.last_checkpoint
-				or (child.last_checkpoint == last_car.last_checkpoint
-				and child.last_checkpoint_time < last_car.last_checkpoint_time)))):
-				if (child.place > last_car.place):
-					var place = child.place
-					child.place = last_car.place
-					last_car.place = place
-					
-			last_car = child 
+
 
 	
 
