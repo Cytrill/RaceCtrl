@@ -16,33 +16,15 @@ func calc_positions():
 			car.calc_score()
 			print(car.score)
 			car_array.append(car)
-			
-	
-	
-	for index in range(1,car_array.size()):
-		var currentvalue = car_array[index]
-		var position = index
-		while position>0 and car_array[position-1].score>currentvalue.score:
-		    car_array[position]=car_array[position-1]
-		    position = position-1
-		
-		car_array[position]=currentvalue	
-
-	
-	for i in range(car_array.size()-1):
-    	var x = car_array[i]
-	    var j = i - 1
-	    while (j >= 0 and car_array[j].score > x.score):
-	        car_array[j+1] = car_array[j]
-	        j = j - 1
-	    car_array[j+1] = x
-	 	
-	for i in range(car_array.size()-1):
-		#print(str(i)+"=i, Place:" + str(car_array[i].place))
+	car_array.sort_custom(self, "score_comparator")
+	for i in range(0, car_array.size() ):
 		car_array[i].place = (i+1)
-	
 
-
+func score_comparator(a, b):
+	if (a.score > b.score):
+		return true
+	else:
+		return false
 
 func _on_body_enter(body):
 	if ("Cars" in body.get_groups()):
