@@ -17,8 +17,12 @@ func calc_positions():
 			print(car.score)
 			car_array.append(car)
 	car_array.sort_custom(self, "score_comparator")
+	var lbPos = get_node("/root/World/GUI/Positions")
+	lbPos.set_text("")
+
 	for i in range(0, car_array.size() ):
 		car_array[i].place = (i+1)
+		lbPos.set_text(lbPos.get_text() + "\n" + str(car_array[i].place)+". Player "+str(car_array[i].player_number) )
 
 func score_comparator(a, b):
 	if (a.score > b.score):
