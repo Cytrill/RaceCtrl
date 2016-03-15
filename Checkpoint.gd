@@ -32,16 +32,19 @@ func score_comparator(a, b):
 
 func _on_body_enter(body):
 	if ("Cars" in body.get_groups()):
-		if body.last_checkpoint == cp_number-1:
+		if body.last_checkpoint == cp_number-1 && !body.race_over:
 			#print("BEFORE: Lap: "+str(body.lap)+", Checkpoint:"+str(body.last_checkpoint) + ", Time: " + str(body.last_checkpoint_time))
 			body.last_checkpoint = cp_number
 			body.last_checkpoint_time = get_node("/root/World").time_elapsed
 			#print("AFTER Lap: "+str(body.lap)+", Checkpoint:"+str(body.last_checkpoint) + ", Time: " + str(body.last_checkpoint_time))
 			calc_positions()
 		if finish_line && body.last_checkpoint == final_cp :
-			body.lap += 1
-			if (body.lap > current_lap):
-				current_lap = body.lap
-			body.last_checkpoint = cp_number
-			calc_positions()
-			body.last_checkpoint_time = get_node("/root/World").time_elapsed
+			if (body.lap < get_node("/root/World").number_of_laps):
+				body.lap += 1
+				if (body.lap > current_lap):
+					current_lap = body.lap
+				body.last_checkpoint = cp_number
+				calc_positions()
+				body.last_checkpoint_time = get_node("/root/World").time_elapsed
+			else:
+				body.race_over = true

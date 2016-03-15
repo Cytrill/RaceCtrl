@@ -4,6 +4,8 @@ extends RigidBody2D
 export var player_number = 0
 var joy_tresh = 0.2
 
+var race_over = false
+
 var nose_norm = Vector2(0,0)
 var accel = 60.0
 var sun = null
@@ -28,6 +30,8 @@ func _ready():
 	sound_motor = get_node("SamplePlayer2D").play("engine3")
 	
 func _fixed_process(delta):
+	if (race_over):
+		player_controlled = false
 	#print(str(get_linear_velocity().length()))
 	nose_norm = Vector2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
 	if player_controlled && Input.is_joy_button_pressed(player_number,  1):

@@ -3,6 +3,7 @@ extends Node2D
 
 var time_elapsed = 0
 var spawn_time = 100
+export var number_of_laps = 3
 
 #Player Colors
 const colarray = [Color(0, 0, 1), Color(0, 1, 0), Color(0, 1, 1),
@@ -111,7 +112,10 @@ func state_timeup(delta):
 				var sprite =new_player.get_node("Sprite")
 				var height = sprite.get_texture().get_height() * sprite.get_scale().y + 10
 				var width = sprite.get_texture().get_width() * sprite.get_scale().x + 20
-				new_player.set_pos(Vector2(new_player.get_pos().x +80+ height*last_player_number*(1-last_player_number%2), new_player.get_pos().y -30 + width*(last_player_number%2)))
+				var x = new_player.get_pos().x + last_player_number/2*height
+				var y = new_player.get_pos().y -30 + width*(last_player_number%2)
+				var even = last_player_number%2
+				new_player.set_pos(Vector2( x , y))
 				sprite.set_modulate(colarray[i%8])
 				new_player.colorA = colarray[i%8]
 				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
