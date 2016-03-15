@@ -4,6 +4,7 @@ extends Area2D
 export var cp_number = 0;
 export var finish_line = false
 export var final_cp = 1
+var current_lap = 1
 
 func _ready():
 	connect("body_enter", self, "_on_body_enter")
@@ -17,7 +18,7 @@ func calc_positions():
 			car_array.append(car)
 	car_array.sort_custom(self, "score_comparator")
 	var lbPos = get_node("/root/World/GUI/Positions")
-	lbPos.set_text("")
+	lbPos.set_text(str(get_node("/root/World/Goal").current_lap)+"\n")
 
 	for i in range(0, car_array.size() ):
 		car_array[i].place = (i+1)
@@ -39,6 +40,8 @@ func _on_body_enter(body):
 			calc_positions()
 		if finish_line && body.last_checkpoint == final_cp :
 			body.lap += 1
+			if (body.lap > current_lap):
+				current_lap = body.lap
 			body.last_checkpoint = cp_number
 			calc_positions()
 			body.last_checkpoint_time = get_node("/root/World").time_elapsed

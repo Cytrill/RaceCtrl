@@ -30,7 +30,7 @@ func _fixed_process(delta):
 	
 
 var game_time = 120 #In Seconds
-var timeout_time = 10 #In Seconds
+var timeout_time = 2 #In Seconds
 var time_remaining = game_time
 
 var game_state_prev = ""
@@ -106,11 +106,16 @@ func state_timeup(delta):
 			if !exists:
 				var new_player = player_preload.instance()
 				new_player.player_number = i
-				last_player_number+=1
+				
 				new_player.set_pos(get_node("Goal").get_pos())
-				new_player.get_node("Sprite").set_modulate(colarray[i%8])
+				var sprite =new_player.get_node("Sprite")
+				var height = sprite.get_texture().get_height() * sprite.get_scale().y + 10
+				var width = sprite.get_texture().get_width() * sprite.get_scale().x + 20
+				new_player.set_pos(Vector2(new_player.get_pos().x +80+ height*last_player_number*(1-last_player_number%2), new_player.get_pos().y -30 + width*(last_player_number%2)))
+				sprite.set_modulate(colarray[i%8])
 				new_player.colorA = colarray[i%8]
 				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
 				leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
 				get_node("/root/World").add_child(new_player)
+				last_player_number+=1
 	
