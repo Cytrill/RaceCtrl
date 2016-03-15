@@ -17,6 +17,9 @@ var lap = 0
 var place = 0
 var score = 0
 
+var player_controlled = false
+var colorA = Color(0,0,0)
+
 func _ready():
 	add_to_group("Cars")
 	sun = get_node("/root/World/Sun")
@@ -27,10 +30,10 @@ func _ready():
 func _fixed_process(delta):
 	#print(str(get_linear_velocity().length()))
 	nose_norm = Vector2(get_node("Nose").get_global_pos().x - get_pos().x, get_node("Nose").get_global_pos().y - get_pos().y).normalized()
-	if Input.is_joy_button_pressed(player_number,  1):
+	if player_controlled && Input.is_joy_button_pressed(player_number,  1):
 		accel = abs(accel)
 		apply_impulse(Vector2(0,0),nose_norm*accel)
-	if Input.is_joy_button_pressed(player_number,  2):
+	if player_controlled && Input.is_joy_button_pressed(player_number,  2):
 		accel = -abs(accel)
 		apply_impulse(Vector2(0,0),nose_norm*accel)
 	
@@ -47,11 +50,11 @@ func _fixed_process(delta):
 			#get_node("SampleSkid").stop_voice(sound_skid)
 			sound_skid = get_node("SampleSkid").play("skid")
 		
-	if Input.get_joy_axis(player_number,  0) < -joy_tresh:
+	if player_controlled && Input.get_joy_axis(player_number,  0) < -joy_tresh:
 			set_rot(get_rot()+ min (.015*get_linear_velocity().length()*delta, 0.05) * (accel/abs(accel)))
 			#set_rot(get_rot()+1*delta)
 			
-	if Input.get_joy_axis(player_number, 0) > joy_tresh:
+	if player_controlled && Input.get_joy_axis(player_number, 0) > joy_tresh:
 			set_rot(get_rot()- min (.015*get_linear_velocity().length()*delta, 0.05)* (accel/abs(accel))) 
 			#set_rot(get_rot()-1*delta)
 	

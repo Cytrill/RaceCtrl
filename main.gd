@@ -4,6 +4,7 @@ extends Node2D
 var time_elapsed = 0
 var spawn_time = 100
 
+#Player Colors
 const colarray = [Color(0, 0, 1), Color(0, 1, 0), Color(0, 1, 1),
 	Color(1, 0, 0), Color(1, 0, 1), Color(1, 1, 0), Color(1, 1, 1), Color(0, 0, 0)]
 
@@ -14,34 +15,102 @@ func _ready():
 
 func _fixed_process(delta):
 	time_elapsed += delta
+	
+	game_state_prev = game_state
+	game_state = game_state_next
+	
+	if (game_state == "running"):
+		state_running(delta)
+	
+	if (game_state == "timeup"):
+		state_timeup(delta)
+	
 	get_node("Skidmarks").set_texture(get_node("Viewport").get_render_target_texture())
 	
-	if time_elapsed < spawn_time:
-		for i in range(1,128):
-			if Input.is_joy_button_pressed(i, 0):
-				print("Button: " + str(i))
-				var exists = false
-				for child in get_node("/root/World").get_children():
-					if "Cars" in child.get_groups():
-						if child.player_number == i:
-							exists = true
-				if !exists:
-					var new_player = player_preload.instance()
-					new_player.player_number = i
-					new_player.set_pos(get_node("Goal").get_pos())
-					new_player.get_node("Sprite").set_modulate(colarray[i%8])
-					leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
-					leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
-					get_node("/root/World").add_child(new_player)
-	
 	
 
+var game_time = 120 #In Seconds
+var timeout_time = 10 #In Seconds
+var time_remaining = game_time
 
+var game_state_prev = ""
+var game_state = ""
+var game_state_next = "timeup"
+
+var fight_dialog_time = 2 #In Seconds
+var last_player_number = 0
+var countdown_started = false
+
+func state_running(delta):
+	if (game_state_prev != "running"):
+		time_elapsed = 0 #Reset Timer
+		#Activate Ships:
+		for car in get_node("/root/World").get_children():
+			if "Cars" in car.get_groups():
+				car.player_controlled = true
+		
+		
 	
-
-func _on_raiseZIndex_body_enter( body ):
-	pass # replace with function body
-
-
-func _on_RaiseZIndex_body_enter( body ):
-	pass # replace with function body
+	time_remaining = game_time - time_elapsed
+	
+	if (time_elapsed > fight_dialog_time):
+		pass#get_node("HUD/LGo").hide()
+	
+	if (time_remaining <= 0):
+		game_state_next = "timeup"
+	else:
+		var m = floor(time_remaining / 60)
+		var s = (int(floor(time_remaining)) % 60)
+		
+		get_node("GUI/Timer").set_text(str(m) + ":" + str(s))
+	
+func state_timeup(delta):
+	#Just entering timeup state:
+	if (game_state_prev != "timeup"):
+		last_player_number = 0
+		time_elapsed = 0 #Reset Timer
+		
+		#Remove all Players
+		"""
+		for player in get_node("Players").get_children():
+			player.queue_free()
+		"""
+		
+	#Start countdown after two Players have joined the game:
+	if (last_player_number > 1):
+		if (!countdown_started):
+			time_elapsed = 0
+			countdown_started = true
+		time_remaining = timeout_time - time_elapsed
+	else:
+		time_remaining = timeout_time
+	
+	if (time_remaining <= 0):
+		game_state_next = "running"
+		get_node("GUI/Timer").hide()
+	else:
+		var m = floor(time_remaining / 60)
+		var s = (int(floor(time_remaining)) % 60)
+		
+		get_node("GUI/Timer").set_text(str(m) + ":" + str(s))
+		
+		
+	#Check if a Player wants to join the game:
+	for i in range(1,128):
+		if Input.is_joy_button_pressed(i, 0):
+			var exists = false
+			for child in get_node("/root/World").get_children():
+				if "Cars" in child.get_groups():
+					if child.player_number == i:
+						exists = true
+			if !exists:
+				var new_player = player_preload.instance()
+				new_player.player_number = i
+				last_player_number+=1
+				new_player.set_pos(get_node("Goal").get_pos())
+				new_player.get_node("Sprite").set_modulate(colarray[i%8])
+				new_player.colorA = colarray[i%8]
+				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
+				leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 7)
+				get_node("/root/World").add_child(new_player)
+	

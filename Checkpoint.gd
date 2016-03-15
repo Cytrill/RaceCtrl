@@ -14,7 +14,6 @@ func calc_positions():
 	for car in get_node("/root/World").get_children():
 		if "Cars" in car.get_groups():
 			car.calc_score()
-			print(car.score)
 			car_array.append(car)
 	car_array.sort_custom(self, "score_comparator")
 	var lbPos = get_node("/root/World/GUI/Positions")
@@ -22,7 +21,7 @@ func calc_positions():
 
 	for i in range(0, car_array.size() ):
 		car_array[i].place = (i+1)
-		lbPos.set_text(lbPos.get_text() + "\n" + str(car_array[i].place)+". Player "+str(car_array[i].player_number) )
+		lbPos.set_text(lbPos.get_text() + "\n" + str(car_array[i].place)+". P"+str(car_array[i].player_number) )
 
 func score_comparator(a, b):
 	if (a.score > b.score):
@@ -38,11 +37,8 @@ func _on_body_enter(body):
 			body.last_checkpoint_time = get_node("/root/World").time_elapsed
 			#print("AFTER Lap: "+str(body.lap)+", Checkpoint:"+str(body.last_checkpoint) + ", Time: " + str(body.last_checkpoint_time))
 			calc_positions()
-			print("Place: " +str(body.place))
 		if finish_line && body.last_checkpoint == final_cp :
 			body.lap += 1
 			body.last_checkpoint = cp_number
 			calc_positions()
-			print("Lap: " +str(body.lap))
-			print("Place: " +str(body.place))
 			body.last_checkpoint_time = get_node("/root/World").time_elapsed
