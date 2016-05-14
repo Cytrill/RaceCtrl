@@ -70,3 +70,11 @@ func _integrate_forces(state):
 		
 func calc_score():
 	score = (lap * 10000) + (last_checkpoint * 100) + (1/ (1+last_checkpoint_time))
+	
+func _notification(what):
+	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
+		#turn off LEDs on quit:
+		leds.set_led(player_number, 0, 0, 0, 0, 0)
+		leds.set_led(player_number, 1, 0, 0, 0, 0)
+		
+		get_tree().quit() # default behavior
