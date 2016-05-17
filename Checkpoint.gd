@@ -22,7 +22,7 @@ func calc_positions():
 
 	for i in range(0, car_array.size() ):
 		car_array[i].place = (i+1)
-		lbPos.set_text(lbPos.get_text() + "\n" + str(car_array[i].place)+". P"+str(car_array[i].player_number) )
+		lbPos.set_text(lbPos.get_text() + "\n" + str(car_array[i].place)+". "+str(car_array[i].player_name) )
 
 func score_comparator(a, b):
 	if (a.score > b.score):

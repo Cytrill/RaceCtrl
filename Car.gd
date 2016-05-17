@@ -6,6 +6,8 @@ var joy_tresh = 0.2
 
 var race_over = false
 
+var player_name = "player"
+
 var nose_norm = Vector2(0,0)
 var accel = 60.0
 var sun = null
@@ -74,7 +76,7 @@ func calc_score():
 func _notification(what):
 	if (what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST):
 		#turn off LEDs on quit:
-		leds.set_led(player_number, 0, 0, 0, 0, 0)
-		leds.set_led(player_number, 1, 0, 0, 0, 0)
+		cytrill.set_led(player_number, 0, 0, 0, 0, 0)
+		cytrill.set_led(player_number, 1, 0, 0, 0, 0)
 		
 		get_tree().quit() # default behavior

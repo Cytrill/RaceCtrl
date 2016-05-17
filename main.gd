@@ -31,7 +31,7 @@ func _fixed_process(delta):
 	
 
 var game_time = 120 #In Seconds
-var timeout_time = 10 #In Seconds
+var timeout_time = 20 #In Seconds
 var time_remaining = game_time
 
 var game_state_prev = ""
@@ -97,7 +97,7 @@ func state_timeup(delta):
 		
 		
 	#Check if a Player wants to join the game:
-	for i in range(0,128):
+	for i in range(0,1024):
 		if Input.is_joy_button_pressed(i, 0):
 			var exists = false
 			for child in get_node("/root/World").get_children():
@@ -107,7 +107,7 @@ func state_timeup(delta):
 			if !exists:
 				var new_player = player_preload.instance()
 				new_player.player_number = i
-				
+				new_player.player_name = cytrill.get_name(i)
 				new_player.set_pos(get_node("Goal").get_pos())
 				var sprite =new_player.get_node("Sprite")
 				var height = sprite.get_texture().get_height() * sprite.get_scale().y + 10
@@ -118,8 +118,8 @@ func state_timeup(delta):
 				new_player.set_pos(Vector2( x , y))
 				sprite.set_modulate(colarray[i%8])
 				new_player.colorA = colarray[i%8]
-				leds.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
-				leds.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
+				cytrill.set_led(i, 0, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
+				cytrill.set_led(i, 1, colarray[i%8].r*255, colarray[i%8].g*255, colarray[i%8].b*255, 2)
 				get_node("/root/World").add_child(new_player)
 				last_player_number+=1
 	
